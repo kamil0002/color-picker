@@ -2,6 +2,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import Root from './pages/Root';
 import GlobalStyles from './theme/GlobalStyles';
 import theme from './theme/theme';
+import Navigation from './components/Navigation/Navigation';
 
 const Overlay = styled.div`
   position: fixed;
@@ -12,6 +13,7 @@ const Overlay = styled.div`
     rgba(255, 255, 255, 0.06) 100%
   );
   backdrop-filter: blur(4px);
+  z-index: -1;
 `;
 
 function App() {
@@ -19,6 +21,7 @@ function App() {
     <div>
       <GlobalStyles />
       <ThemeProvider theme={theme}>
+        <Navigation />
         <Overlay />
         <Root />
       </ThemeProvider>
