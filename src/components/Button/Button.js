@@ -8,7 +8,7 @@ const Button = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.fontColor};
+  color: ${({ theme }) => theme.white};
   transition: all 200ms;
 
   ${({ randomColor }) =>
@@ -26,6 +26,11 @@ const Button = styled.div`
   &:active {
     transform: translateY(0);
     box-shadow: 0 2px 3px 0 rgb(0 0 0 / 15%);
+  }
+
+  @media only screen and (max-width: 640px) {
+    padding: 10px 18px;
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
   }
 `;
 export default Button;

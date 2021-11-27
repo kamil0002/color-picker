@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 
 const Header = styled.h1`
   margin: 0;
-  color: ${({ theme }) => theme.fontColor};
+  color: ${({ theme }) => theme.white};
   font-size: ${({ theme }) => theme.fontSize.large};
 
   @media only screen and (max-width: 700px) {
@@ -36,7 +36,7 @@ const Header = styled.h1`
 `;
 
 const SavedPalettes = styled.a`
-  color: ${({ theme }) => theme.fontColor};
+  color: ${({ theme }) => theme.white};
   font-size: ${({ theme }) => theme.fontSize.regular};
   font-weight: ${({ theme }) => theme.fontThin};
   display: flex;

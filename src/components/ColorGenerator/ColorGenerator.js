@@ -3,14 +3,21 @@ import styled from 'styled-components';
 import Button from '../Button/Button';
 
 const Wrapper = styled.div`
-  max-width: 500px;
+  width: 500px;
+  margin-bottom: 100px;
+  @media only screen and (max-width: 540px) {
+    width: 400px;
+  }
+  @media only screen and (max-width: 440px) {
+    width: 300px;
+  }
 `;
 
 const PaletteWrapper = styled.div`
   background-color: #85b6ff;
   z-index: 1;
   padding: 40px 30px 50px;
-  border-bottom: 1px solid ${({ theme }) => theme.fontColor};
+  border-bottom: 1px solid ${({ theme }) => theme.white};
   border-radius: 8px 8px 0 0;
 `;
 
@@ -26,27 +33,26 @@ const ColorsPalette = styled.div`
     position: relative;
   }
   @media only screen and (max-width: 500px) {
-   grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
   }
-
 `;
 
 const Color = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 1px solid ${({ theme }) => theme.fontColor};
+  border: 1px solid ${({ theme }) => theme.white};
   background-color: ${({ color }) => `rgb(${color})`};
   position: relative;
   justify-self: center;
 
   @media only screen and (max-width: 500px) {
-   &:last-of-type {
-     position: absolute;
-     bottom: 0;
+    &:last-of-type {
+      position: absolute;
+      bottom: 0;
+    }
   }
-}
 `;
 
 const ColorHex = styled.span`
@@ -55,7 +61,7 @@ const ColorHex = styled.span`
   left: 50%;
   transform: translateX(-50%);
   font-weight: ${({ theme }) => theme.fontThin};
-  color: ${({ theme }) => theme.fontColor};
+  color: ${({ theme }) => theme.white};
 `;
 
 const ButtonGroup = styled.div`
@@ -64,8 +70,8 @@ const ButtonGroup = styled.div`
   margin-top: 80px;
 
   @media only screen and (max-width: 500px) {
-      flex-direction: column;
-      height: 150px;
+    flex-direction: column;
+    height: 150px;
   }
 `;
 
@@ -77,10 +83,17 @@ const RandomColorWrapper = styled.div`
   border-radius: 0 0 8px 8px;
 `;
 
+const Header = styled.h2`
+  margin: 0 0 2.4rem;
+  color: ${({ theme }) => theme.white};
+  text-align: center;
+`;
+
 const ColorGenerator = () => {
   return (
     <Wrapper>
       <PaletteWrapper>
+        <Header>Color Generator</Header>
         <ColorsPalette>
           <Color color="29 21 45">
             <ColorHex>#456b53</ColorHex>
