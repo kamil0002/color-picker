@@ -39,6 +39,17 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  margin-bottom: 5rem;
+
+  @media only screen and (max-width: 640px) {
+    flex-direction: column;
+    height: 480px;
+    width: 400px;
+    margin: 0 auto 5rem;
+  }
+  @media only screen and (max-width: 440px) {
+    width: 300px;
+  }
 `;
 
 const ColorHex = styled.span`
@@ -46,6 +57,10 @@ const ColorHex = styled.span`
   color: ${({ theme }) => theme.white};
   font-weight: ${({ theme }) => theme.fontThin};
   font-size: ${({ theme }) => theme.fontSize.regular};
+
+  @media only screen and (max-width: 640px) {
+    margin-top: 1.4rem;
+  }
 `;
 
 const WheelWrapper = styled.div`

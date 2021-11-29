@@ -4,13 +4,17 @@ import Button from '../Button/Button';
 
 const Wrapper = styled.div`
   width: 500px;
-  margin-bottom: 100px;
+
+  @media only screen and (max-width: 1200px) {
+    margin-bottom: 50px;
+}
   @media only screen and (max-width: 540px) {
     width: 400px;
   }
   @media only screen and (max-width: 440px) {
     width: 300px;
   }
+  
 `;
 
 const PaletteWrapper = styled.div`

@@ -3,14 +3,15 @@ import styled from 'styled-components';
 import TopWheel from './TopWheel';
 import BottomWheel from './BottomWheel';
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+ display: flex;
+ flex-direction: column;
+`;
 
 const ColorWheels = () => {
      return (
           <Wrapper>
-               <TopWheel 
-                    color="#fffefa"
-               />
+               <TopWheel/>
                <BottomWheel />
           </Wrapper>
      )
