@@ -1,20 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../Button/Button';
+import { connect } from 'react-redux';
+import { rerollColorsAction } from '../../actions';
 
 const Wrapper = styled.div`
   width: 500px;
 
   @media only screen and (max-width: 1200px) {
     margin-bottom: 50px;
-}
+  }
   @media only screen and (max-width: 540px) {
     width: 400px;
   }
   @media only screen and (max-width: 440px) {
     width: 300px;
   }
-  
 `;
 
 const PaletteWrapper = styled.div`
@@ -47,7 +48,7 @@ const Color = styled.div`
   height: 60px;
   border-radius: 50%;
   border: 1px solid ${({ theme }) => theme.white};
-  background-color: ${({ color }) => `rgb(${color})`};
+  background-color: ${({ color }) => color};
   position: relative;
   justify-self: center;
 
@@ -93,30 +94,21 @@ const Header = styled.h2`
   text-align: center;
 `;
 
-const ColorGenerator = () => {
+const ColorGenerator = ({ generatedColors: randomColors, rerollColors }) => {
+
   return (
     <Wrapper>
       <PaletteWrapper>
         <Header>Color Generator</Header>
         <ColorsPalette>
-          <Color color="29 21 45">
-            <ColorHex>#456b53</ColorHex>
-          </Color>
-          <Color color="59 31 115">
-            <ColorHex>#456b53</ColorHex>
-          </Color>
-          <Color color="159 212 15">
-            <ColorHex>#456b53</ColorHex>
-          </Color>
-          <Color color="211 111 111">
-            <ColorHex>#456b53</ColorHex>
-          </Color>
-          <Color color="255 20 111">
-            <ColorHex>#456b53</ColorHex>
-          </Color>
+          {randomColors.map(color => (
+            <Color key={color.id} id={color.id} color={convertRGBtoHex(color.RGBColor)}>
+              <ColorHex>{convertRGBtoHex(color.RGBColor)}</ColorHex>
+            </Color>
+          ))}
         </ColorsPalette>
         <ButtonGroup>
-          <Button>Roll</Button>
+          <Button onClick={() => rerollColors()}>Roll</Button>
           <Button>Save palette</Button>
         </ButtonGroup>
       </PaletteWrapper>
@@ -132,4 +124,26 @@ const ColorGenerator = () => {
   );
 };
 
-export default ColorGenerator;
+const convertRGBtoHex = rgbString => {
+  const rgbArray = rgbString.split(',');
+  const rgbAsNumbers = rgbArray.map(color => Number.parseInt(color));
+  return '#' +
+  rgbAsNumbers
+    .map(color =>
+      color.toString(16).length === 1
+        ? 0 + color.toString(16).toUpperCase()
+        : color.toString(16).toUpperCase()
+    )
+    .join('');
+}
+
+const mapToStateProps = state => {
+  const generatedColors = state;
+  return generatedColors;
+};
+
+const mapDispatchToProps = dispatch => ({
+  rerollColors: () => dispatch(rerollColorsAction()),
+});
+
+export default connect(mapToStateProps, mapDispatchToProps)(ColorGenerator);
