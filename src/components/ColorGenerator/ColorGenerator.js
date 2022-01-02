@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '../Button/Button';
 import lockOff from './../../assets/lockOff.svg';
@@ -7,6 +7,83 @@ import { connect } from 'react-redux';
 import { rerollColorsAction } from '../../actions';
 import { updateLocksColorsAction } from '../../actions';
 import { resetRolledColors } from '../../actions';
+import Tooltip from './../Tooltip/Tooltip';
+
+const convertRGBtoHex = rgbString => {
+  const rgbArray = rgbString.split(',');
+  const rgbAsNumbers = rgbArray.map(color => Number.parseInt(color));
+  return (
+    '#' +
+    rgbAsNumbers
+      .map(color =>
+        color.toString(16).length === 1
+          ? 0 + color.toString(16).toUpperCase()
+          : color.toString(16).toUpperCase()
+      )
+      .join('')
+  );
+};
+
+const ColorGenerator = ({
+  generatedColors: randomColors,
+  rerollColors,
+  updateLocksColors,
+  resetRolledColors,
+}) => {
+  const [tooltipPosition, setTooltipPosition] = useState({});
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const copyToClipboard = e => {
+    const clickedBtn = e.target;
+
+    const color = clickedBtn.getAttribute('color');
+    navigator.clipboard.writeText(color).then(_ => {
+      setTooltipPosition({
+        x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+        y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+      });
+      setTooltipVisible(true);
+      setTimeout(() => setTooltipVisible(false), 1500);
+    });
+  };
+  return (
+    <Wrapper>
+      <PaletteWrapper>
+        <Header>Color Generator</Header>
+        <ColorsPalette>
+          {randomColors.map((color, i) => (
+            <Color
+              icon={randomColors[i].locked ? lockOn : lockOff}
+              key={color.id}
+              id={color.id}
+              color={convertRGBtoHex(color.RGBColor)}
+              onClick={() => updateLocksColors(i)}
+            >
+              <ColorHex>{convertRGBtoHex(color.RGBColor)}</ColorHex>
+            </Color>
+          ))}
+        </ColorsPalette>
+        <ButtonGroup>
+          <Button onClick={() => rerollColors()}>Roll</Button>
+          <Button>Save palette</Button>
+          <Button onClick={() => resetRolledColors()}>Reset</Button>
+        </ButtonGroup>
+      </PaletteWrapper>
+
+      <RandomColorWrapper>
+        <Button randomColor>Generate random color</Button>
+        <ButtonGroup>
+        {tooltipVisible && (
+        <Tooltip position={tooltipPosition}>Copied!</Tooltip>
+      )}
+          <Button onClick={e => copyToClipboard(e)} randomColor>
+            Copy color
+          </Button>
+          <Button randomColor>Save color</Button>
+        </ButtonGroup>
+      </RandomColorWrapper>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   width: 500px;
@@ -65,7 +142,6 @@ const Color = styled.div`
     }
   }
 
-  ${({ displayIcon }) => console.log(displayIcon)};
   &::after {
     content: '';
     position: absolute;
@@ -117,62 +193,6 @@ const Header = styled.h2`
   color: ${({ theme }) => theme.white};
   text-align: center;
 `;
-
-const ColorGenerator = ({
-  generatedColors: randomColors,
-  rerollColors,
-  updateLocksColors,
-  resetRolledColors,
-}) => {
-  return (
-    <Wrapper>
-      <PaletteWrapper>
-        <Header>Color Generator</Header>
-        <ColorsPalette>
-          {randomColors.map((color, i) => (
-            <Color
-              icon={randomColors[i].locked ? lockOn : lockOff}
-              key={color.id}
-              id={color.id}
-              color={convertRGBtoHex(color.RGBColor)}
-              onClick={() => updateLocksColors(i)}
-            >
-              <ColorHex>{convertRGBtoHex(color.RGBColor)}</ColorHex>
-            </Color>
-          ))}
-        </ColorsPalette>
-        <ButtonGroup>
-          <Button onClick={() => rerollColors()}>Roll</Button>
-          <Button>Save palette</Button>
-          <Button onClick={() => resetRolledColors()}>Reset</Button>
-        </ButtonGroup>
-      </PaletteWrapper>
-
-      <RandomColorWrapper>
-        <Button randomColor>Generate random color</Button>
-        <ButtonGroup>
-          <Button randomColor>Copy color</Button>
-          <Button randomColor>Save color</Button>
-        </ButtonGroup>
-      </RandomColorWrapper>
-    </Wrapper>
-  );
-};
-
-const convertRGBtoHex = rgbString => {
-  const rgbArray = rgbString.split(',');
-  const rgbAsNumbers = rgbArray.map(color => Number.parseInt(color));
-  return (
-    '#' +
-    rgbAsNumbers
-      .map(color =>
-        color.toString(16).length === 1
-          ? 0 + color.toString(16).toUpperCase()
-          : color.toString(16).toUpperCase()
-      )
-      .join('')
-  );
-};
 
 const mapToStateProps = state => {
   const generatedColors = state;

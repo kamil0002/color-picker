@@ -33,3 +33,8 @@ export function convertObjToString (obj) {
 export function getEffectiveRadius (trueRadius, lineWidth) {
   return trueRadius - lineWidth / 2
 }
+
+
+export function showSaveInformation(e) {
+
+}
