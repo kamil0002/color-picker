@@ -3,27 +3,43 @@ import styled from 'styled-components';
 import iro from '@jaames/iro';
 import Button from './../Button/Button';
 import Tooltip from './../Tooltip/Tooltip';
-import { showSaveInformation } from './../../utils/utils';
 
 const TopWheel = () => {
   const [currentColor, setCurrentColor] = useState('#6e97cc');
-  const onColorChange = ({ hexString }) => setCurrentColor(hexString);
 
   const [tooltipPosition, setTooltipPosition] = useState({});
   const [tooltipVisible, setTooltipVisible] = useState(false);
-
+  const [timeoutId, setTimeoutId] = useState(null);
+  const [tooltipText, setTooltipText] = useState('');
+  
+  const onColorChange = ({ hexString }) => setCurrentColor(hexString);
+  
   const copyToClipboardHandler = e => {
+    clearTimeout(timeoutId)
     const clickedBtn = e.target;
-
     const color = clickedBtn.getAttribute('color');
+
     navigator.clipboard.writeText(color).then(_ => {
       setTooltipPosition({
         x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
         y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
       });
+      setTooltipText('Copied!');
       setTooltipVisible(true);
-      setTimeout(() => setTooltipVisible(false), 1500);
+      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
     });
+  };
+
+  const saveColorHandler = (e) => {
+    clearTimeout(timeoutId)
+    const clickedBtn = e.target;
+      setTooltipPosition({
+        x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+        y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+      });
+      setTooltipText('Saved!');
+      setTooltipVisible(true);
+      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
   };
 
   useEffect(() => {
@@ -44,10 +60,10 @@ const TopWheel = () => {
       </WheelWrapper>
       <ButtonGroup>
       {tooltipVisible && (
-        <Tooltip position={tooltipPosition}>Copied!</Tooltip>
+        <Tooltip position={tooltipPosition}>{tooltipText}</Tooltip>
       )}
         <Button color={currentColor} onClick={(e) => copyToClipboardHandler(e)}>Copy hexcode</Button>
-        <Button>Save color</Button>
+        <Button onClick={e => saveColorHandler(e)}>Save color</Button>
       </ButtonGroup>
     </Wrapper>
   );

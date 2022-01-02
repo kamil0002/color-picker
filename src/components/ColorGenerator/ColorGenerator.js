@@ -32,19 +32,38 @@ const ColorGenerator = ({
 }) => {
   const [tooltipPosition, setTooltipPosition] = useState({});
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
+  const [tooltipText, setTooltipText] = useState('');
+
   const copyToClipboard = e => {
+    clearTimeout(timeoutId)
     const clickedBtn = e.target;
 
     const color = clickedBtn.getAttribute('color');
+
     navigator.clipboard.writeText(color).then(_ => {
       setTooltipPosition({
         x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
         y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
       });
+      setTooltipText('Copied!');
       setTooltipVisible(true);
-      setTimeout(() => setTooltipVisible(false), 1500);
+      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
     });
   };
+  
+  const saveColorHandler = (e) => {
+    clearTimeout(timeoutId)
+    const clickedBtn = e.target;
+      setTooltipPosition({
+        x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+        y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+      });
+      setTooltipText('Saved!');
+      setTooltipVisible(true);
+      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
+  };
+
   return (
     <Wrapper>
       <PaletteWrapper>
@@ -64,7 +83,7 @@ const ColorGenerator = ({
         </ColorsPalette>
         <ButtonGroup>
           <Button onClick={() => rerollColors()}>Roll</Button>
-          <Button>Save palette</Button>
+          <Button onClick={(e) => saveColorHandler(e)}>Save palette</Button>
           <Button onClick={() => resetRolledColors()}>Reset</Button>
         </ButtonGroup>
       </PaletteWrapper>
@@ -73,12 +92,12 @@ const ColorGenerator = ({
         <Button randomColor>Generate random color</Button>
         <ButtonGroup>
         {tooltipVisible && (
-        <Tooltip position={tooltipPosition}>Copied!</Tooltip>
+        <Tooltip position={tooltipPosition}>{tooltipText}</Tooltip>
       )}
           <Button onClick={e => copyToClipboard(e)} randomColor>
             Copy color
           </Button>
-          <Button randomColor>Save color</Button>
+          <Button randomColor onClick={(e) => saveColorHandler(e)}>Save color</Button>
         </ButtonGroup>
       </RandomColorWrapper>
     </Wrapper>

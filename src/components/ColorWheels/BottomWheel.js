@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Button from './../Button/Button';
 import ColorWheel from './ColorWheel';
 import Tooltip from './../Tooltip/Tooltip';
-import { showSaveInformation } from './../../utils/utils';
 
 const defaultColour = 'rgb(110, 151, 204)';
 
@@ -12,19 +11,35 @@ const BottomWheel = () => {
 
   const [tooltipPosition, setTooltipPosition] = useState({});
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
+  const [tooltipText, setTooltipText] = useState('');
 
   const copyToClipboardHandler = e => {
-    const clickedBtn = e.target;
+    clearTimeout(timeoutId);
 
+    const clickedBtn = e.target;
     const color = clickedBtn.getAttribute('color');
     navigator.clipboard.writeText(color).then(_ => {
       setTooltipPosition({
         x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
         y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
       });
+      setTooltipText('Copied!');
       setTooltipVisible(true);
-      setTimeout(() => setTooltipVisible(false), 1500);
+      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
     });
+  };
+
+  const saveColorHandler = (e) => {
+    clearTimeout(timeoutId);
+    const clickedBtn = e.target;
+      setTooltipPosition({
+        x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+        y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+      });
+      setTooltipText('Saved!');
+      setTooltipVisible(true);
+      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
   };
 
   return (
@@ -49,10 +64,10 @@ const BottomWheel = () => {
       </WheelWrapper>
       <ButtonGroup>
       {tooltipVisible && (
-        <Tooltip position={tooltipPosition}>Copied!</Tooltip>
+        <Tooltip position={tooltipPosition}>{tooltipText}</Tooltip>
       )}
         <Button color={currentColor} onClick={(e) => copyToClipboardHandler(e)}>Copy RGB</Button>
-        <Button>Save color</Button>
+        <Button onClick={(e) => saveColorHandler(e)}>Save color</Button>
       </ButtonGroup>
     </Wrapper>
   );
