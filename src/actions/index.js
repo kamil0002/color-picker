@@ -20,6 +20,12 @@ export const rerollColorsAction = () => {
   };
 };
 
+export const resetRolledColors = () => {
+  return {
+    type: 'RESET_ROLLED_COLORS',
+  }
+}
+
 export const updateLocksColorsAction = (index) => {
   return {
     type: 'LOCK',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '../Button/Button';
 import lockOff from './../../assets/lockOff.svg';
@@ -6,6 +6,7 @@ import lockOn from './../../assets/lockOn.svg';
 import { connect } from 'react-redux';
 import { rerollColorsAction } from '../../actions';
 import { updateLocksColorsAction } from '../../actions';
+import { resetRolledColors } from '../../actions';
 
 const Wrapper = styled.div`
   width: 500px;
@@ -121,7 +122,8 @@ const ColorGenerator = ({
   generatedColors: randomColors,
   rerollColors,
   updateLocksColors,
-  lockedColors,
+  // lockedColors,
+  resetRolledColors
 }) => {
 
   return (
@@ -131,7 +133,7 @@ const ColorGenerator = ({
         <ColorsPalette>
           {randomColors.map((color, i) => (
             <Color
-              icon={lockedColors[i] ? lockOn : lockOff}
+              icon={randomColors[i].locked ? lockOn : lockOff}
               key={color.id}
               id={color.id}
               color={convertRGBtoHex(color.RGBColor)}
@@ -144,6 +146,7 @@ const ColorGenerator = ({
         <ButtonGroup>
           <Button onClick={() => rerollColors()}>Roll</Button>
           <Button>Save palette</Button>
+          <Button onClick={() => resetRolledColors()}>Reset</Button>
         </ButtonGroup>
       </PaletteWrapper>
 
@@ -175,13 +178,15 @@ const convertRGBtoHex = rgbString => {
 
 const mapToStateProps = state => {
   const generatedColors = state;
-  const lockedColors = state;
-  return { ...generatedColors, ...lockedColors };
+  // const lockedColors = state;
+  // return { ...generatedColors, ...lockedColors };
+  return generatedColors;
 };
 
 const mapDispatchToProps = dispatch => ({
   rerollColors: () => dispatch(rerollColorsAction()),
-  updateLocksColors: i => dispatch(updateLocksColorsAction(i)),
+  updateLocksColors: index => dispatch(updateLocksColorsAction(index)),
+  resetRolledColors: () => dispatch(resetRolledColors()),
 });
 
 export default connect(mapToStateProps, mapDispatchToProps)(ColorGenerator);
