@@ -122,10 +122,8 @@ const ColorGenerator = ({
   generatedColors: randomColors,
   rerollColors,
   updateLocksColors,
-  // lockedColors,
-  resetRolledColors
+  resetRolledColors,
 }) => {
-
   return (
     <Wrapper>
       <PaletteWrapper>
@@ -178,8 +176,6 @@ const convertRGBtoHex = rgbString => {
 
 const mapToStateProps = state => {
   const generatedColors = state;
-  // const lockedColors = state;
-  // return { ...generatedColors, ...lockedColors };
   return generatedColors;
 };
 

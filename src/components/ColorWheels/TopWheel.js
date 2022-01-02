@@ -31,11 +31,14 @@ const TopWheel = () => {
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.div.attrs(({ backgroundColor }) => ({
+  style: {
+    background: backgroundColor,
+  },
+}))`
   width: 600px;
   height: 360px;
   border-radius: 10px;
-  background-color: ${({ backgroundColor }) => backgroundColor};
   display: flex;
   align-items: center;
   justify-content: space-evenly;

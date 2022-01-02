@@ -1,5 +1,3 @@
-import { isElement } from 'react-dom/cjs/react-dom-test-utils.production.min';
-
 const initialState = {
   generatedColors: [
     {
@@ -33,6 +31,7 @@ const initialState = {
     },
   ],
   lockedColors: [false, false, false, false, false],
+  generatedPalette: [],
   savedColors: {
     palettes: [],
     wheelColors: [],
@@ -57,7 +56,9 @@ const rootReducer = (state = initialState, action) => {
       };
     }
     case 'LOCK': {
-      const isElementLocked = !state.generatedColors[action.payload.index].locked;
+      const isElementLocked = !state.generatedColors[action.payload.index]
+        .locked;
+        console.log(state.generatedPalette);
 
       return {
         ...state,
@@ -70,22 +71,17 @@ const rootReducer = (state = initialState, action) => {
             };
           }),
         ],
-        // lockedColors: [
-        //   ...state.lockedColors.map((item, index) => {
-        //     return index === action.payload.index ? !item : item;
-        //   }),
-        // ],
         // Dodanie lub usunięciu elementu z listy zapisanych
-        ...(state.savedColors.palettes = isElementLocked
+        generatedPalette: isElementLocked
           ? [
-              ...state.savedColors.palettes,
+              ...state.generatedPalette,
               state.generatedColors[action.payload.index],
             ]
           : [
-              ...state.savedColors.palettes.filter(
+              ...state.generatedPalette.filter(
                 item => item.id !== action.payload.index
               ),
-            ]),
+            ],
       };
     }
     case 'RESET_ROLLED_COLORS': {
@@ -93,7 +89,6 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         ...state.savedColors.palettes,
         generatedColors: [...initialState.generatedColors],
-        // lockedColors: [...initialState.lockedColors],
       };
     }
     default:
