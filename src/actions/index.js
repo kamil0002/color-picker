@@ -19,3 +19,12 @@ export const rerollColorsAction = () => {
     },
   };
 };
+
+export const updateLocksColorsAction = (index) => {
+  return {
+    type: 'LOCK',
+    payload: {
+      index
+    }
+  }
+};
