@@ -1,5 +1,9 @@
 import styled, { ThemeProvider } from 'styled-components';
+import { Provider } from 'react-redux';
+import store from './store';
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import Root from './pages/Root';
+import SavedColors from './pages/SavedColors';
 import GlobalStyles from './theme/GlobalStyles';
 import theme from './theme/theme';
 import Navigation from './components/Navigation/Navigation';
@@ -18,14 +22,19 @@ const Overlay = styled.div`
 
 function App() {
   return (
-    <div>
-      <GlobalStyles />
-      <ThemeProvider theme={theme}>
-        <Navigation />
-        <Overlay />
-        <Root />
-      </ThemeProvider>
-    </div>
+    <Provider store={store}>
+      <Router>
+        <GlobalStyles />
+        <ThemeProvider theme={theme}>
+          <Navigation />
+          <Overlay />
+          <Routes>
+            <Route path="/" element={<Root />} />
+            <Route path="/saved" element={<SavedColors />} />
+          </Routes>
+        </ThemeProvider>
+      </Router>
+    </Provider>
   );
 }
 

@@ -1,45 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '../Button/Button';
+import Color from '../ColorCircle/ColorCircle';
 import lockOff from './../../assets/lockOff.svg';
 import lockOn from './../../assets/lockOn.svg';
 import { connect } from 'react-redux';
 import { rerollColorsAction } from '../../actions';
-import { updateLocksColorsAction } from '../../actions';
-import { resetRolledColors } from '../../actions';
+import { updateLockedColorsAction } from '../../actions';
+import { resetRolledColorsAction } from '../../actions';
+import { savePaletteAction } from '../../actions';
 import Tooltip from './../Tooltip/Tooltip';
+import convertRGBtoHex from './../../utils/RGBToHex';
 
-const convertRGBtoHex = rgbString => {
-  const rgbArray = rgbString.split(',');
-  const rgbAsNumbers = rgbArray.map(color => Number.parseInt(color));
-  return (
-    '#' +
-    rgbAsNumbers
-      .map(color =>
-        color.toString(16).length === 1
-          ? 0 + color.toString(16).toUpperCase()
-          : color.toString(16).toUpperCase()
-      )
-      .join('')
-  );
-};
 
 const ColorGenerator = ({
   generatedColors: randomColors,
   rerollColors,
-  updateLocksColors,
+  updateLockedColors,
   resetRolledColors,
+  savePalette,
 }) => {
   const [tooltipPosition, setTooltipPosition] = useState({});
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
   const [tooltipText, setTooltipText] = useState('');
+  const [currentRandomColor, setCurrentRandomColor] = useState('#8A2BE2');
+
+  const generateRandomColor = () => {
+    let RGBColor = [];
+    for (let i = 0; i < 3; i++) {
+      RGBColor.push(Math.trunc(Math.random() * 255));
+    }
+    console.log(currentRandomColor);
+    setCurrentRandomColor(convertRGBtoHex(RGBColor.join(',')));
+  };
 
   const copyToClipboard = e => {
-    clearTimeout(timeoutId)
+    clearTimeout(timeoutId);
     const clickedBtn = e.target;
 
     const color = clickedBtn.getAttribute('color');
+    console.log(color);
 
     navigator.clipboard.writeText(color).then(_ => {
       setTooltipPosition({
@@ -51,17 +52,18 @@ const ColorGenerator = ({
       setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
     });
   };
-  
-  const saveColorHandler = (e) => {
-    clearTimeout(timeoutId)
+
+  const saveColorHandler = e => {
+    clearTimeout(timeoutId);
     const clickedBtn = e.target;
-      setTooltipPosition({
-        x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
-        y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
-      });
-      setTooltipText('Saved!');
-      setTooltipVisible(true);
-      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
+    setTooltipPosition({
+      x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+      y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+    });
+    setTooltipText('Saved!');
+    setTooltipVisible(true);
+    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
+    savePalette();
   };
 
   return (
@@ -75,7 +77,7 @@ const ColorGenerator = ({
               key={color.id}
               id={color.id}
               color={convertRGBtoHex(color.RGBColor)}
-              onClick={() => updateLocksColors(i)}
+              onClick={() => updateLockedColors(i)}
             >
               <ColorHex>{convertRGBtoHex(color.RGBColor)}</ColorHex>
             </Color>
@@ -83,21 +85,29 @@ const ColorGenerator = ({
         </ColorsPalette>
         <ButtonGroup>
           <Button onClick={() => rerollColors()}>Roll</Button>
-          <Button onClick={(e) => saveColorHandler(e)}>Save palette</Button>
+          <Button onClick={e => saveColorHandler(e)}>Save palette</Button>
           <Button onClick={() => resetRolledColors()}>Reset</Button>
         </ButtonGroup>
       </PaletteWrapper>
 
-      <RandomColorWrapper>
-        <Button randomColor>Generate random color</Button>
+      <RandomColorWrapper color={currentRandomColor}>
+        <Button onClick={generateRandomColor} randomColor>
+          Generate random color
+        </Button>
         <ButtonGroup>
-        {tooltipVisible && (
-        <Tooltip position={tooltipPosition}>{tooltipText}</Tooltip>
-      )}
-          <Button onClick={e => copyToClipboard(e)} randomColor>
+          {tooltipVisible && (
+            <Tooltip position={tooltipPosition}>{tooltipText}</Tooltip>
+          )}
+          <Button
+            color={currentRandomColor}
+            onClick={e => copyToClipboard(e)}
+            randomColor
+          >
             Copy color
           </Button>
-          <Button randomColor onClick={(e) => saveColorHandler(e)}>Save color</Button>
+          <Button randomColor onClick={e => saveColorHandler(e)}>
+            Save color
+          </Button>
         </ButtonGroup>
       </RandomColorWrapper>
     </Wrapper>
@@ -143,42 +153,6 @@ const ColorsPalette = styled.div`
   }
 `;
 
-const Color = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 1px solid ${({ theme }) => theme.white};
-  background-color: ${({ color }) => color};
-
-  position: relative;
-  justify-self: center;
-  cursor: pointer;
-
-  @media only screen and (max-width: 500px) {
-    &:last-of-type {
-      position: absolute;
-      bottom: 0;
-    }
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    background-image: ${({ icon }) => `url(${icon})`};
-    background-repeat: no-repeat;
-    background-position: center;
-    inset: 0;
-    opacity: 0;
-    transition: all 150ms ease-in;
-  }
-
-  &:hover {
-    &::after {
-      opacity: 1;
-    }
-  }
-`;
-
 const ColorHex = styled.span`
   position: absolute;
   bottom: -50%;
@@ -200,7 +174,7 @@ const ButtonGroup = styled.div`
 `;
 
 const RandomColorWrapper = styled.div`
-  background-color: blueviolet;
+  background-color: ${({ color }) => color};
   display: flex;
   flex-direction: column;
   padding: 40px 0px;
@@ -220,8 +194,9 @@ const mapToStateProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   rerollColors: () => dispatch(rerollColorsAction()),
-  updateLocksColors: index => dispatch(updateLocksColorsAction(index)),
-  resetRolledColors: () => dispatch(resetRolledColors()),
+  updateLockedColors: index => dispatch(updateLockedColorsAction(index)),
+  resetRolledColors: () => dispatch(resetRolledColorsAction()),
+  savePalette: () => dispatch(savePaletteAction()),
 });
 
 export default connect(mapToStateProps, mapDispatchToProps)(ColorGenerator);

@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 const Button = styled.div`
   cursor: pointer;
+  user-select: none;
   background-color: ${({ theme }) => theme.colorPrimary};
   border-radius: 10px;
   padding: 12px 35px;

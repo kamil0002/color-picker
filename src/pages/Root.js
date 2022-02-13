@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Provider } from 'react-redux';
-import store from './../store';
 import ColorGenerator from '../components/ColorGenerator/ColorGenerator';
-import ColorWheels from '../components/ColorWheels/ColorWheels';
+import WheelsGroup from '../components/ColorWheels/WheelsGroup';
 
 const Wrapper = styled.div`
   padding: 60px 0 40px;
@@ -20,12 +18,10 @@ const Wrapper = styled.div`
 
 const Root = () => {
   return (
-    <Provider store={store}>
-      <Wrapper>
-        <ColorGenerator />
-        <ColorWheels />
-      </Wrapper>
-    </Provider>
+    <Wrapper>
+      <ColorGenerator />
+      <WheelsGroup />
+    </Wrapper>
   );
 };
 

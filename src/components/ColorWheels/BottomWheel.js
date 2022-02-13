@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from './../Button/Button';
-import ColorWheel from './ColorWheel';
+import ColorPicker from './ColorPicker';
 import Tooltip from './../Tooltip/Tooltip';
 
 const defaultColour = 'rgb(110, 151, 204)';
@@ -46,7 +46,7 @@ const BottomWheel = () => {
     <Wrapper backgroundColor={currentColor}>
       <WheelWrapper>
         <ColorRGB>{currentColor}</ColorRGB>
-        <ColorWheel
+        <ColorPicker
           radius={130}
           padding={6}
           lineWidth={50}

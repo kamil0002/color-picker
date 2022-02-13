@@ -20,17 +20,40 @@ export const rerollColorsAction = () => {
   };
 };
 
-export const resetRolledColors = () => {
+export const resetRolledColorsAction = () => {
   return {
     type: 'RESET_ROLLED_COLORS',
-  }
-}
+  };
+};
 
-export const updateLocksColorsAction = (index) => {
+export const updateLockedColorsAction = index => {
   return {
     type: 'LOCK',
     payload: {
-      index
-    }
-  }
+      index,
+    },
+  };
+};
+
+export const savePaletteAction = () => {
+  return {
+    type: 'SAVE_PALETTE',
+  };
+};
+
+export const deletePaletteAction = e => {
+  const id = +e.target.parentNode.previousSibling.id;
+  return {
+    type: 'DELETE_PALETTE',
+    payload: {
+      id,
+    },
+  };
+};
+
+export const saveColorAction = color => {
+  return {
+    type: 'SAVE_COLOR',
+    payload: color,
+  };
 };

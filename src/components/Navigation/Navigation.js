@@ -1,6 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import PaletteIcon from './../../assets/paletteIcon.svg';
+
+const Navigation = () => {
+  return (
+    <Wrapper>
+      <Header>Create your best color palette</Header>
+      <SavedPalettes>
+        <StyledLink to="/saved">Saved colors</StyledLink>
+        <PaletteImage src={PaletteIcon} />
+      </SavedPalettes>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.navColor};
@@ -15,7 +28,7 @@ const Wrapper = styled.div`
   box-shadow: 0px 29px 38px -31px rgba(66, 68, 90, 1);
 
   @media only screen and (max-width: 500px) {
-    font-size: ${({theme}) => theme.fontSize.small};
+    font-size: ${({ theme }) => theme.fontSize.small};
     padding: 0 25px;
     height: 60px;
   }
@@ -31,11 +44,11 @@ const Header = styled.h1`
   }
 
   @media only screen and (max-width: 500px) {
-    font-size: ${({theme}) => theme.fontSize.small};
+    font-size: ${({ theme }) => theme.fontSize.small};
   }
 `;
 
-const SavedPalettes = styled.a`
+const SavedPalettes = styled.div`
   color: ${({ theme }) => theme.white};
   font-size: ${({ theme }) => theme.fontSize.regular};
   font-weight: ${({ theme }) => theme.fontThin};
@@ -53,16 +66,9 @@ const PaletteImage = styled.img`
   margin-left: 10px;
 `;
 
-const Navigation = () => {
-  return (
-    <Wrapper>
-      <Header>Create your best color palette</Header>
-      <SavedPalettes>
-        <span>Saved colors</span>
-        <PaletteImage src={PaletteIcon} />
-      </SavedPalettes>
-    </Wrapper>
-  );
-};
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${({ theme }) => theme.white};
+`;
 
 export default Navigation;

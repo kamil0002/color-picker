@@ -32,11 +32,39 @@ const initialState = {
   ],
   lockedColors: [false, false, false, false, false],
   generatedPalette: [],
-  savedColors: {
-    palettes: [],
-    wheelColors: [],
-    randomColors: [],
-  },
+  savedPalettes: [
+    {
+      id: 1,
+      colors: [
+        '207, 225, 250',
+        '59, 31, 115',
+        '133, 255, 143',
+        '211, 111, 111',
+        '255, 20, 111',
+      ],
+    },
+    {
+      id: 2,
+      colors: [
+        '207, 225, 250',
+        '59, 31, 115',
+        '133, 255, 143',
+        '211, 111, 111',
+        '255, 20, 111',
+      ],
+    },
+    {
+      id: 3,
+      colors: [
+        '207, 225, 250',
+        '59, 31, 115',
+        '133, 255, 143',
+        '211, 111, 111',
+        '255, 20, 111',
+      ],
+    },
+  ],
+  savedColors: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -58,7 +86,6 @@ const rootReducer = (state = initialState, action) => {
     case 'LOCK': {
       const isElementLocked = !state.generatedColors[action.payload.index]
         .locked;
-        console.log(state.generatedPalette);
 
       return {
         ...state,
@@ -87,8 +114,34 @@ const rootReducer = (state = initialState, action) => {
     case 'RESET_ROLLED_COLORS': {
       return {
         ...state,
-        ...state.savedColors.palettes,
+        ...state.palettes,
         generatedColors: [...initialState.generatedColors],
+      };
+    }
+    case 'SAVE_PALETTE': {
+      return {
+        ...state,
+        ...state.savedPalettes.push({
+          id: +Date.now()
+            .toString()
+            .slice(-10)
+            .concat(
+              Math.random()
+                .toString()
+                .slice(-5)
+            ),
+          colors: state.generatedColors.map(prop => prop.RGBColor),
+        }),
+      };
+    }
+    case 'DELETE_PALETTE': {
+      return {
+        ...state,
+        savedPalettes: [
+          ...state.savedPalettes.filter(
+            color => color.id !== action.payload.id
+          ),
+        ],
       };
     }
     default:

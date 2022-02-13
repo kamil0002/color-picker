@@ -400,7 +400,7 @@ class ColourWheel extends Component {
     drawShades = drawShades.bind(this);
 
     if (animated) {
-      animateShades();
+      animateShades.call();
     } else {
       // TODO: Refactor into its own func.
       drawShades();
