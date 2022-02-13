@@ -6,7 +6,8 @@ import convertRGBtoHex from './../../utils/RGBToHex';
 import Button from './../Button/Button';
 import { deletePaletteAction } from '../../actions';
 
-const Palette = ({ palette, deletePalette }) => {
+const Palette = ({ palette, deletePalette, copyPaletteHandler }) => {
+
   return (
     <Wrapper>
       <PaletteWrapper>
@@ -14,13 +15,16 @@ const Palette = ({ palette, deletePalette }) => {
         <PaletteContent id={palette['id']}>
           {palette['colors'].map((color, i) => (
             <ColorCircleWrapper key={i}>
-              <StyledColorCircle color={convertRGBtoHex(color)} />
-              <ColorValue>{convertRGBtoHex(color)}</ColorValue>
+              <ColorElement>
+                <StyledColorCircle color={convertRGBtoHex(color)} />
+                <ColorValue>{convertRGBtoHex(color)}</ColorValue>
+              </ColorElement>
             </ColorCircleWrapper>
           ))}
         </PaletteContent>
         <PaletteActions>
           <StyledButton onClick={e => deletePalette(e)}>Delete</StyledButton>
+          <StyledButton onClick={copyPaletteHandler}>Copy</StyledButton>
         </PaletteActions>
       </PaletteWrapper>
     </Wrapper>
@@ -39,7 +43,6 @@ const Wrapper = styled.div`
 `;
 
 const PaletteWrapper = styled.div`
-  width: 500px;
   background: #85b6ff;
   border-radius: 8px;
   text-align: center;
@@ -55,17 +58,33 @@ const PaletteContent = styled.div`
   display: flex;
   justify-content: space-around;
   margin: 0 2rem;
+  flex-wrap: wrap;
 `;
 
 const StyledColorCircle = styled(ColorCircle)`
   cursor: default;
+  margin: auto;
+
+  @media only screen and (max-width: 500px) {
+    &:last-of-type {
+      position: relative;
+      bottom: auto;
+    }
+  }
 `;
 
 const ColorCircleWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+  &:not(:nth-last-child(1)) {
+    margin-right: 2rem;
+  }
+
+  @media only screen and (max-width: 500px) {
+    margin: auto;
+  }
 `;
+
+const ColorElement = styled.div``;
 
 const ColorValue = styled.p`
   color: ${({ theme }) => theme.white};
@@ -73,6 +92,7 @@ const ColorValue = styled.p`
 
 const PaletteActions = styled.div`
   margin-top: 1.2rem;
+  display: flex;
 `;
 
 const StyledButton = styled(Button)`

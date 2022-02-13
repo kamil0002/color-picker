@@ -36,6 +36,14 @@ export default connect(mapToStateProps, mapDispatchToProps)(Switcher);
 const Wrapper = styled.div`
   margin-left: 8rem;
   display: flex;
+
+  @media only screen and (max-width: 800px) {
+    margin-left: 0;
+  }
+
+  @media only screen and (max-width: 650px) {
+    flex-basis: 60%;
+  }
 `;
 
 const PalettesOption = styled.div`
@@ -52,6 +60,10 @@ const PalettesOption = styled.div`
   -ms-user-select: none;
   transition: all 100ms ease-out;
   cursor: pointer;
+
+  @media only screen and (max-width: 650px) {
+    width: 140px;
+  }
 `;
 
 const ColorsOption = styled.div`

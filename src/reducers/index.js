@@ -33,39 +33,9 @@ const initialState = {
   savedColorsView: 'palettes',
   lockedColors: [false, false, false, false, false],
   generatedPalette: [],
-  savedPalettes: [
-    {
-      id: 1,
-      colors: [
-        '207, 225, 250',
-        '59, 31, 115',
-        '133, 255, 143',
-        '211, 111, 111',
-        '255, 20, 111',
-      ],
-    },
-    {
-      id: 2,
-      colors: [
-        '207, 225, 250',
-        '59, 31, 115',
-        '133, 255, 143',
-        '211, 111, 111',
-        '255, 20, 111',
-      ],
-    },
-    {
-      id: 3,
-      colors: [
-        '207, 225, 250',
-        '59, 31, 115',
-        '133, 255, 143',
-        '211, 111, 111',
-        '255, 20, 111',
-      ],
-    },
-  ],
+  savedPalettes: [],
   savedColors: [],
+  savedUserColors: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -120,22 +90,31 @@ const rootReducer = (state = initialState, action) => {
       };
     }
     case 'SAVE_PALETTE': {
+      localStorage.setItem(
+        'palettes',
+        JSON.stringify([
+          ...state.savedPalettes,
+          {
+            id: action.payload.paletteId,
+            colors: state.generatedColors.map(prop => prop.RGBColor),
+          },
+        ])
+      );
       return {
         ...state,
         ...state.savedPalettes.push({
-          id: +Date.now()
-            .toString()
-            .slice(-10)
-            .concat(
-              Math.random()
-                .toString()
-                .slice(-5)
-            ),
+          id: action.payload.paletteId,
           colors: state.generatedColors.map(prop => prop.RGBColor),
         }),
       };
     }
     case 'DELETE_PALETTE': {
+      localStorage.setItem(
+        'palettes',
+        JSON.stringify(
+          state.savedPalettes.filter(color => color.id !== action.payload.id)
+        )
+      );
       return {
         ...state,
         savedPalettes: [
@@ -146,6 +125,10 @@ const rootReducer = (state = initialState, action) => {
       };
     }
     case 'SAVE_COLOR': {
+      localStorage.setItem(
+        'app-colors',
+        JSON.stringify([...state.savedColors, action.payload.color])
+      );
       return {
         ...state,
         ...state.savedColors.push(action.payload.color),
@@ -155,6 +138,57 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         savedColorsView: action.payload.currentView,
+      };
+    }
+    case 'SAVE_USER_COLOR': {
+      localStorage.setItem(
+        'user-colors',
+        JSON.stringify([...state.savedUserColors, action.payload.color])
+      );
+      return {
+        ...state,
+        ...state.savedUserColors.push(action.payload.color),
+      };
+    }
+    case 'DELETE_COLOR': {
+      localStorage.setItem(
+        'app-colors',
+        JSON.stringify(
+          state.savedColors.filter(color => color !== action.payload.color)
+        )
+      );
+      localStorage.setItem(
+        'user-colors',
+        JSON.stringify(
+          state.savedUserColors.filter(color => color !== action.payload.color)
+        )
+      );
+      return {
+        ...state,
+        savedColors: state.savedColors.filter(
+          color => color !== action.payload.color
+        ),
+        savedUserColors: state.savedUserColors.filter(
+          color => color !== action.payload.color
+        ),
+      };
+    }
+    case 'LOAD_STORAGE': {
+      console.log(action.payload.values?.savedPalettesStorage);
+      return {
+        ...state,
+        savedColors:
+          action.payload.values?.appColorsStorage !== undefined
+            ? [...action.payload.values?.appColorsStorage]
+            : state.savedColors,
+        savedPalettes:
+          action.payload.values?.savedPalettesStorage !== undefined
+            ? [...action.payload.values?.savedPalettesStorage]
+            : state.savedColors,
+        savedUserColors:
+          action.payload.values?.userColorsStorage !== undefined
+            ? [...action.payload.values?.userColorsStorage]
+            : state.savedUserColors,
       };
     }
     default:

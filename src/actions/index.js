@@ -36,8 +36,17 @@ export const updateLockedColorsAction = index => {
 };
 
 export const savePaletteAction = () => {
+  const paletteId = +Date.now()
+    .toString()
+    .slice(-10)
+    .concat(
+      Math.random()
+        .toString()
+        .slice(-5)
+    );
   return {
     type: 'SAVE_PALETTE',
+    payload: { paletteId },
   };
 };
 
@@ -62,5 +71,36 @@ export const changeViewAction = currentView => {
   return {
     type: 'CHANGE_VIEW',
     payload: { currentView },
+  };
+};
+
+export const saveUserColorAction = color => {
+  return {
+    type: 'SAVE_USER_COLOR',
+    payload: { color },
+  };
+};
+
+export const deleteColorAction = color => {
+  return {
+    type: 'DELETE_COLOR',
+    payload: { color },
+  };
+};
+
+export const loadStorageDataAction = values => {
+  for (const value in values) {
+    if (values[value] == null || values[value].length === 0) {
+      delete values[value];
+    }
+  }
+  if (
+    values?.savedPalettesStorage &&
+    Object.keys(values?.savedPalettesStorage).length === 0
+  )
+    delete values.savedPalettesStorage;
+  return {
+    type: 'LOAD_STORAGE',
+    payload: { values },
   };
 };

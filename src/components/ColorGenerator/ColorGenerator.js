@@ -54,6 +54,20 @@ const ColorGenerator = ({
     });
   };
 
+  const savePaletteHandler = e => {
+    clearTimeout(timeoutId);
+    const clickedBtn = e.target;
+    setTooltipPosition({
+      x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+      y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+    });
+    setTooltipText('Saved!');
+    setTooltipVisible(true);
+    // saveColor(currentRandomColor);
+    savePalette();
+    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
+  };
+
   const saveColorHandler = e => {
     clearTimeout(timeoutId);
     const clickedBtn = e.target;
@@ -64,9 +78,8 @@ const ColorGenerator = ({
     setTooltipText('Saved!');
     setTooltipVisible(true);
     saveColor(currentRandomColor);
-    savePalette();
     setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
-  };
+  }
 
   return (
     <Wrapper>
@@ -87,7 +100,7 @@ const ColorGenerator = ({
         </ColorsPalette>
         <ButtonGroup>
           <Button onClick={() => rerollColors()}>Roll</Button>
-          <Button onClick={e => saveColorHandler(e)}>Save palette</Button>
+          <Button onClick={e => savePaletteHandler(e)}>Save palette</Button>
           <Button onClick={() => resetRolledColors()}>Reset</Button>
         </ButtonGroup>
       </PaletteWrapper>
