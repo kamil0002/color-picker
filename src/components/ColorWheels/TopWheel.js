@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import iro from '@jaames/iro';
 import Button from './../Button/Button';
 import Tooltip from './../Tooltip/Tooltip';
+import { saveColorAction } from './../../actions';
 
-const TopWheel = () => {
-  const [currentColor, setCurrentColor] = useState('#6e97cc');
+const TopWheel = ({ saveColor }) => {
+  const [currentColor, setCurrentColor] = useState('#6E97CC');
 
   const [tooltipPosition, setTooltipPosition] = useState({});
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
   const [tooltipText, setTooltipText] = useState('');
-  
-  const onColorChange = ({ hexString }) => setCurrentColor(hexString);
-  
+
+  const onColorChange = ({ hexString }) =>
+    setCurrentColor(hexString.toUpperCase());
+
   const copyToClipboardHandler = e => {
-    clearTimeout(timeoutId)
+    clearTimeout(timeoutId);
     const clickedBtn = e.target;
     const color = clickedBtn.getAttribute('color');
 
@@ -26,20 +29,21 @@ const TopWheel = () => {
       });
       setTooltipText('Copied!');
       setTooltipVisible(true);
-      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
+      setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
     });
   };
 
-  const saveColorHandler = (e) => {
-    clearTimeout(timeoutId)
+  const saveColorHandler = e => {
+    clearTimeout(timeoutId);
     const clickedBtn = e.target;
-      setTooltipPosition({
-        x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
-        y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
-      });
-      setTooltipText('Saved!');
-      setTooltipVisible(true);
-      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
+    setTooltipPosition({
+      x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+      y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+    });
+    setTooltipText('Saved!');
+    setTooltipVisible(true);
+    saveColor(currentColor);
+    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
   };
 
   useEffect(() => {
@@ -59,15 +63,23 @@ const TopWheel = () => {
         <Wheel id="picker"></Wheel>
       </WheelWrapper>
       <ButtonGroup>
-      {tooltipVisible && (
-        <Tooltip position={tooltipPosition}>{tooltipText}</Tooltip>
-      )}
-        <Button color={currentColor} onClick={(e) => copyToClipboardHandler(e)}>Copy hexcode</Button>
+        {tooltipVisible && (
+          <Tooltip position={tooltipPosition}>{tooltipText}</Tooltip>
+        )}
+        <Button color={currentColor} onClick={e => copyToClipboardHandler(e)}>
+          Copy hexcode
+        </Button>
         <Button onClick={e => saveColorHandler(e)}>Save color</Button>
       </ButtonGroup>
     </Wrapper>
   );
 };
+
+const mapDispatchToProps = dispatch => ({
+  saveColor: color => dispatch(saveColorAction(color)),
+});
+
+export default connect(null, mapDispatchToProps)(TopWheel);
 
 const Wrapper = styled.div.attrs(({ backgroundColor }) => ({
   style: {
@@ -118,5 +130,3 @@ const ButtonGroup = styled.div`
 `;
 
 const Wheel = styled.div``;
-
-export default TopWheel;

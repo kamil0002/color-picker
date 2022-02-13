@@ -3,26 +3,38 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Palette from '../components/Palette/Palette';
+import Switcher from '../components/Switcher/Switcher';
 import ReturnArrow from './../assets/returnArrow.svg';
+import ColorCircle from '../components/ColorCircle/ColorCircle';
 
-const SavedPalettes = ({ savedPalettes }) => {
-  console.log(savedPalettes);
+const SavedPalettes = ({ savedPalettes, savedColors, activeView }) => {
   return (
     <Wrapper>
-      <StyledLink to="/" img={ReturnArrow} />
-      <PalettesContainer>
-        {savedPalettes.map((palette, i) => (
-          <Palette key={i} palette={palette} />
-        ))}
-      </PalettesContainer>
+      <LocalNavWrapper>
+        <StyledLink to="/" img={ReturnArrow} />
+        <Switcher />
+      </LocalNavWrapper>
+      {activeView === 'palettes' && (
+        <PalettesContainer>
+          {savedPalettes.map((palette, i) => (
+            <Palette key={i} palette={palette} />
+          ))}
+        </PalettesContainer>
+      )}
+      {activeView === 'colors' && (
+        <ColorsContainer>
+          {savedColors.map(color => (
+            <ColorCircle color={color} />
+          ))}
+        </ColorsContainer>
+      )}
     </Wrapper>
   );
 };
 
 const mapToStateProps = state => {
-  console.log(state);
-  const savedPalettes = state;
-  return savedPalettes;
+  const { savedPalettes, savedColors, savedColorsView: activeView } = state;
+  return { savedPalettes, savedColors, activeView };
 };
 
 export default connect(mapToStateProps)(SavedPalettes);
@@ -39,6 +51,11 @@ const StyledLink = styled(Link)`
   margin: 3rem;
 `;
 
+const LocalNavWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const PalettesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -51,3 +68,5 @@ const PalettesContainer = styled.div`
     margin: 0;
   }
 `;
+
+const ColorsContainer = styled.div``;

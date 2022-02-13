@@ -54,6 +54,13 @@ export const deletePaletteAction = e => {
 export const saveColorAction = color => {
   return {
     type: 'SAVE_COLOR',
-    payload: color,
+    payload: { color },
+  };
+};
+
+export const changeViewAction = currentView => {
+  return {
+    type: 'CHANGE_VIEW',
+    payload: { currentView },
   };
 };

@@ -9,9 +9,9 @@ import { rerollColorsAction } from '../../actions';
 import { updateLockedColorsAction } from '../../actions';
 import { resetRolledColorsAction } from '../../actions';
 import { savePaletteAction } from '../../actions';
+import { saveColorAction } from '../../actions';
 import Tooltip from './../Tooltip/Tooltip';
 import convertRGBtoHex from './../../utils/RGBToHex';
-
 
 const ColorGenerator = ({
   generatedColors: randomColors,
@@ -19,6 +19,7 @@ const ColorGenerator = ({
   updateLockedColors,
   resetRolledColors,
   savePalette,
+  saveColor,
 }) => {
   const [tooltipPosition, setTooltipPosition] = useState({});
   const [tooltipVisible, setTooltipVisible] = useState(false);
@@ -49,7 +50,7 @@ const ColorGenerator = ({
       });
       setTooltipText('Copied!');
       setTooltipVisible(true);
-      setTimeoutId(setTimeout(() => setTooltipVisible(false), 1500));
+      setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
     });
   };
 
@@ -62,8 +63,9 @@ const ColorGenerator = ({
     });
     setTooltipText('Saved!');
     setTooltipVisible(true);
-    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
+    saveColor(currentRandomColor);
     savePalette();
+    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
   };
 
   return (
@@ -113,6 +115,21 @@ const ColorGenerator = ({
     </Wrapper>
   );
 };
+
+const mapDispatchToProps = dispatch => ({
+  rerollColors: () => dispatch(rerollColorsAction()),
+  updateLockedColors: index => dispatch(updateLockedColorsAction(index)),
+  resetRolledColors: () => dispatch(resetRolledColorsAction()),
+  savePalette: () => dispatch(savePaletteAction()),
+  saveColor: color => dispatch(saveColorAction(color)),
+});
+
+const mapToStateProps = state => {
+  const generatedColors = state;
+  return generatedColors;
+};
+
+export default connect(mapToStateProps, mapDispatchToProps)(ColorGenerator);
 
 const Wrapper = styled.div`
   width: 500px;
@@ -186,17 +203,3 @@ const Header = styled.h2`
   color: ${({ theme }) => theme.white};
   text-align: center;
 `;
-
-const mapToStateProps = state => {
-  const generatedColors = state;
-  return generatedColors;
-};
-
-const mapDispatchToProps = dispatch => ({
-  rerollColors: () => dispatch(rerollColorsAction()),
-  updateLockedColors: index => dispatch(updateLockedColorsAction(index)),
-  resetRolledColors: () => dispatch(resetRolledColorsAction()),
-  savePalette: () => dispatch(savePaletteAction()),
-});
-
-export default connect(mapToStateProps, mapDispatchToProps)(ColorGenerator);

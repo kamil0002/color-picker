@@ -7,12 +7,6 @@ import Button from './../Button/Button';
 import { deletePaletteAction } from '../../actions';
 
 const Palette = ({ palette, deletePalette }) => {
-  console.log('pal ', palette);
-
-  const generateColorElements = () => {
-    console.log(palette);
-  };
-
   return (
     <Wrapper>
       <PaletteWrapper>
@@ -24,7 +18,6 @@ const Palette = ({ palette, deletePalette }) => {
               <ColorValue>{convertRGBtoHex(color)}</ColorValue>
             </ColorCircleWrapper>
           ))}
-          {generateColorElements()}
         </PaletteContent>
         <PaletteActions>
           <StyledButton onClick={e => deletePalette(e)}>Delete</StyledButton>

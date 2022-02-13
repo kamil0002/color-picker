@@ -30,6 +30,7 @@ const initialState = {
       locked: false,
     },
   ],
+  savedColorsView: 'palettes',
   lockedColors: [false, false, false, false, false],
   generatedPalette: [],
   savedPalettes: [
@@ -142,6 +143,18 @@ const rootReducer = (state = initialState, action) => {
             color => color.id !== action.payload.id
           ),
         ],
+      };
+    }
+    case 'SAVE_COLOR': {
+      return {
+        ...state,
+        ...state.savedColors.push(action.payload.color),
+      };
+    }
+    case 'CHANGE_VIEW': {
+      return {
+        ...state,
+        savedColorsView: action.payload.currentView,
       };
     }
     default:
