@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Button from './../Button/Button';
 
 const Form = ({
@@ -10,7 +10,6 @@ const Form = ({
   clearError,
 }) => {
   const [enteredColor, setEnteredColor] = useState('');
-
   return (
     <Wrapper>
       <Header>{headerText}</Header>
@@ -21,7 +20,7 @@ const Form = ({
         type="text"
         value={enteredColor}
         wrongColorFormat={wrongColorFormat}
-        onChange={e => setEnteredColor(e.target.value)}
+        onChange={e => setEnteredColor(e.target.value.toUpperCase())}
         onFocus={clearError}
       />
       <StyledButton color={enteredColor} onClick={buttonAction}>
@@ -31,18 +30,34 @@ const Form = ({
   );
 };
 
+const animateForm = keyframes`
+  0% {
+    transform: translate(-50%,-70%);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translate(-50%,-47%);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translate(-50%,-50%);
+    opacity: 1;
+  }
+`;
+
 const Wrapper = styled.div`
   background: ${({ theme }) => theme.white};
   padding: 3rem 13rem;
   border-radius: 10px;
   position: fixed;
+  z-index: 111;
   left: 50%;
   top: 50%;
-  z-index: 111;
-  transform: translate(-50%, -50%);
   box-shadow: 2px 2px 5px 1px rgb(0 0 0 / 40%);
-  opacity: 0.95;
   z-index: 111111;
+  animation: ${animateForm} 450ms ease-out forwards;
 `;
 
 const Header = styled.h2`

@@ -17,31 +17,28 @@ const BottomWheel = ({ saveColor }) => {
   const [timeoutId, setTimeoutId] = useState(null);
   const [tooltipText, setTooltipText] = useState('');
 
+  const manageTooltipView = (clickedBtn, tooltipText) => {
+    setTooltipPosition({
+      x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+      y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+    });
+    setTooltipText(tooltipText);
+    setTooltipVisible(true);
+    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
+  };
+
   const copyToClipboardHandler = e => {
     clearTimeout(timeoutId);
-
     const clickedBtn = e.target;
     const color = clickedBtn.getAttribute('color');
     navigator.clipboard.writeText(color).then(_ => {
-      setTooltipPosition({
-        x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
-        y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
-      });
-      setTooltipText('Copied!');
-      setTooltipVisible(true);
-      setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
+      manageTooltipView(clickedBtn, 'Copied!');
     });
   };
 
   const saveColorHandler = e => {
     clearTimeout(timeoutId);
-    const clickedBtn = e.target;
-    setTooltipPosition({
-      x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
-      y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
-    });
-    setTooltipText('Saved!');
-    setTooltipVisible(true);
+    manageTooltipView(e.target, 'Saved!')
     saveColor(
       convertRGBtoHex(
         currentColor.substring(
@@ -50,7 +47,6 @@ const BottomWheel = ({ saveColor }) => {
         )
       )
     );
-    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
   };
 
   return (

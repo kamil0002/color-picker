@@ -8,8 +8,10 @@ const Navigation = () => {
     <Wrapper>
       <Header>Create your best color palette</Header>
       <SavedPalettes>
-        <StyledLink to="/saved">Saved colors</StyledLink>
-        <PaletteImage src={PaletteIcon} />
+        <StyledLink to="/saved">
+          Saved colors
+          <PaletteImage src={PaletteIcon} />
+        </StyledLink>
       </SavedPalettes>
     </Wrapper>
   );
@@ -69,6 +71,7 @@ const PaletteImage = styled.img`
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: ${({ theme }) => theme.white};
+  display: flex;
 `;
 
 export default Navigation;

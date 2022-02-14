@@ -32,8 +32,17 @@ const ColorGenerator = ({
     for (let i = 0; i < 3; i++) {
       RGBColor.push(Math.trunc(Math.random() * 255));
     }
-    console.log(currentRandomColor);
     setCurrentRandomColor(convertRGBtoHex(RGBColor.join(',')));
+  };
+
+  const manageTooltipView = (clickedBtn, tooltipText) => {
+    setTooltipPosition({
+      x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
+      y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
+    });
+    setTooltipText(tooltipText);
+    setTooltipVisible(true);
+    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
   };
 
   const copyToClipboard = e => {
@@ -41,45 +50,23 @@ const ColorGenerator = ({
     const clickedBtn = e.target;
 
     const color = clickedBtn.getAttribute('color');
-    console.log(color);
 
     navigator.clipboard.writeText(color).then(_ => {
-      setTooltipPosition({
-        x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
-        y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
-      });
-      setTooltipText('Copied!');
-      setTooltipVisible(true);
-      setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
+      manageTooltipView(clickedBtn, 'Copied!');
     });
   };
 
   const savePaletteHandler = e => {
     clearTimeout(timeoutId);
-    const clickedBtn = e.target;
-    setTooltipPosition({
-      x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
-      y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
-    });
-    setTooltipText('Saved!');
-    setTooltipVisible(true);
-    // saveColor(currentRandomColor);
+    manageTooltipView(e.target, 'Saved!');
     savePalette();
-    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
   };
 
   const saveColorHandler = e => {
     clearTimeout(timeoutId);
-    const clickedBtn = e.target;
-    setTooltipPosition({
-      x: clickedBtn.offsetLeft + clickedBtn.offsetWidth / 2 - 10,
-      y: clickedBtn.offsetTop - clickedBtn.offsetHeight + 10,
-    });
-    setTooltipText('Saved!');
-    setTooltipVisible(true);
+    manageTooltipView(e.target, 'Saved!');
     saveColor(currentRandomColor);
-    setTimeoutId(setTimeout(() => setTooltipVisible(false), 500));
-  }
+  };
 
   return (
     <Wrapper>

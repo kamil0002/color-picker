@@ -174,7 +174,6 @@ const rootReducer = (state = initialState, action) => {
       };
     }
     case 'LOAD_STORAGE': {
-      console.log(action.payload.values?.savedPalettesStorage);
       return {
         ...state,
         savedColors:
@@ -195,4 +194,5 @@ const rootReducer = (state = initialState, action) => {
       return state;
   }
 };
+
 export default rootReducer;

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Palette from '../components/Palette/Palette';
 import Switcher from '../components/Switcher/Switcher';
-import ReturnArrow from './../assets/returnArrow.svg';
 import ColorCircle from '../components/ColorCircle/ColorCircle';
 import Tooltip from './../components/Tooltip/Tooltip';
 import Form from '../components/Form/Form';
@@ -118,7 +117,7 @@ const SavedPalettes = ({
         />
       )}
       <LocalNavWrapper>
-        <StyledLink to="/" img={ReturnArrow} />
+        <StyledLink to="/"> &larr; Return</StyledLink>
         <Switcher />
         <ActionsWrapper>
           <AddColor onClick={controlAddColorFormVisibility}>Add Color</AddColor>
@@ -208,13 +207,23 @@ const LocalNavWrapper = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-  display: block;
-  width: 50px;
-  height: 32px;
-  background-image: ${({ img }) => `url(${img})`};
-  background-repeat: no-repeat;
-  background-size: cover;
-  margin: 3rem;
+  margin: 3rem 3rem 3rem 4rem;
+  text-decoration: none;
+  color: ${({ theme }) => theme.white};
+  font-size: 1.9rem;
+  transition: all 200ms ease-out;
+  border-bottom: 1px solid transparent;
+
+
+  &:hover {
+    transform: translateY(-5%);
+    border-bottom: 1px solid ${({ theme }) => theme.white};
+  }
+
+  @media only screen and (max-width: 840px) {
+    margin: 2rem;
+    margin-right: 0;
+  }
 `;
 
 const ActionsWrapper = styled.div`
@@ -259,6 +268,9 @@ const Header = styled.h2`
   margin-bottom: 3rem;
   text-align: center;
   color: ${({ theme }) => theme.white};
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 `;
 
 const PalettesContainer = styled.div`
