@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import ColorCircle from './../ColorCircle/ColorCircle';
 import convertRGBtoHex from './../../utils/RGBToHex';
+import ColorCircle from './../ColorCircle/ColorCircle';
 import Button from './../Button/Button';
 import { deletePaletteAction } from '../../actions';
 
