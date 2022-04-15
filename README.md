@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-#### [Live Version](https://color-generator-2k.web.app)
+## [Live Version](https://color-generator-2k.web.app)
 
 ## Available Scripts
 
